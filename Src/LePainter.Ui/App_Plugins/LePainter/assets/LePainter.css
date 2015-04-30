@@ -1,0 +1,8 @@
+
+body.mce-content-body, .usky-grid textarea.textstring {
+    background-color:transparent;
+}
+
+.usky-grid .usky-row {
+    background-size:cover;
+}

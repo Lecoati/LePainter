@@ -1,0 +1,25 @@
+﻿{   
+	propertyEditors: [      
+		{
+            alias: "LePainter",
+            name: "LePainter",
+            editor: {
+                view: "~/App_Plugins/LePainter/LePainter.html"
+            },
+			prevalues: {
+				fields: [{
+					label: "Stylesheet Path",
+					description: "Backend injected stylesheet file",
+					key: "cssBackendPath",
+					view: "textstring"
+				}]
+			}
+        }
+    ],
+    javascript: [
+		'~/App_Plugins/LePainter/LePainter.controller.js'
+    ],
+	css: [
+		'~/App_Plugins/LePainter/assets/LePainter.css'
+	]
+}
