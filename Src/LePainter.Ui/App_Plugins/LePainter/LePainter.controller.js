@@ -11,9 +11,20 @@
                 });
             }
             var styles = [];
+            var innerObj = {
+                styles: {}
+            };
+
             angular.forEach(obj.styles, function (style, styleIndex) {
-                element.css(styleIndex, style);
-                styles.push(styleIndex);
+                var checkInnerStyles = styleIndex.split("inner-row-");
+
+                if (checkInnerStyles.length > 1) {
+                    innerObj.styles[checkInnerStyles[1]] = style;
+                }
+                else {
+                    element.css(styleIndex, style);
+                    styles.push(styleIndex);
+                }
             });
             element.data("initStyles", styles.join(','));
 
@@ -31,6 +42,9 @@
             }
             element.addClass(element.data("originalClass"));
 
+            if (Object.keys(innerObj.styles).length > 0) {
+                updateSettingStyle(innerObj, element.find(".usky-row-inner"))
+            }
         }
 
         // Watch the grid's model
@@ -70,9 +84,33 @@
 
         watchGridSettings();
 
+		function isMyScriptLoaded(url) {
+			if (url) {
+				var scripts = document.getElementsByTagName('script');
+				for (var i = scripts.length; i--;) {
+					if (scripts[i].src.indexOf(url) != -1) return true;
+				}
+			}
+			return false;
+		}
+		
         // Style needed to improve the grid user experience 
         if ($scope.model.config && $scope.model.config.cssBackendPath && $scope.model.config.cssBackendPath != "") {
-            assetsService.loadCss($scope.model.config.cssBackendPath);
+			var assetPaths = $scope.model.config.cssBackendPath.split(",");
+			
+			angular.forEach(assetPaths, function(assetPath) {
+				assetPath = assetPath.replace(" ", "");
+				
+				if(assetPath.indexOf(".css") != -1) {
+					assetsService.loadCss(assetPath);
+				}
+				else if(assetPath.indexOf(".js") != -1) {
+					if(assetsService.loadedAssets[assetPath]) {
+						delete assetsService.loadedAssets[assetPath];
+					}
+					assetsService.loadJs(assetPath);
+				}
+			});
         }
 
     });
