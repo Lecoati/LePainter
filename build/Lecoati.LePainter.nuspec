@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Lecoati.LePainter</id>
+        <version>1.0.2</version>
+        <title>Umbraco LePainter</title>
+        <authors>LECOATI</authors>
+        <owners>LECOATI</owners>
+        <projectUrl>http://www.lecoati.com/</projectUrl>
+        <description>Umbarco LePainter</description>
+        <summary>Umbarco LePainter</summary>
+        <language>en-US</language>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>LECOATI</tags>
+		<iconUrl>http://lecoati.com/images/logo_lepainter.png</iconUrl>
+		<dependencies />
+    </metadata>
+	<files>
+		<file src="..\Src\LePainter.Ui\App_Plugins\LePainter\**\*.*" target="Content\App_Plugins\LePainter" /> 
+	</files>
+</package>
