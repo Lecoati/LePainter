@@ -53,7 +53,7 @@
                 $scope.$watch(function () {
                     var grids = [];
                     angular.forEach(angular.element($(".usky-grid")), function (value, key) {
-                        grids.push($(value).scope().model.value)
+                        grids.push(angular.element(value).scope().model.value)
                     });
                     return grids;
                 },
