@@ -4,47 +4,82 @@
         // Here we can apply settings and styles on the current grid row element
         var updateSettingStyle = function (obj, element) {
 
+			var newClasses = [];	// Allow for multiple "class" elements 
+			var isActive = false;
+            		/* Native Grid Config Config */
+			
+			// 7.4.x class styling.  Retain "active state"
+			if( element.attr("class").indexOf("-active") >= 0 || element.attr("class").indexOf("-active-child") >= 0 )
+			{
+				isActive = true;
+				var currentClasses = element.attr("class");
+				element.removeClass();
+				element.addClass(element.data("originalClass"));
+				if( currentClasses.indexOf("-active") >= 0 )
+				{
+					element.addClass("-active" );					
+				}
+				if( currentClasses.indexOf("-active-child") >= 0 )
+				{
+					element.addClass("-active-child" );					
+				}
+			}
+			
+			if( !isActive )
+			{
+				if (!element.data("originalClass")) {
+					element.data("originalClass", element.attr("class"));
+					newClasses.push(element.attr("class"));
+				} else {
+					newClasses.push(element.data("originalClass"));
+				}
+				element.removeClass();
+				if (obj.config && Object.keys(obj.config).length > 0) {
+					angular.forEach(Object.keys(obj.config), function (key, index) {
+						if (key) {
+							if (key == "class") {
+								newClasses.push(obj.config[key]);
+							}
+							else
+							{
+								element.attr(key, obj.config[key]);
+							}
+						}
+					});
+				}
+				element.addClass(newClasses.join(' '));
+			}
+			
+			
             /* Native Grid Styles Config */
             if (element.data("initStyles")) {
                 angular.forEach(element.data("initStyles").split(','), function (style, styleIndex) {
                     element.css(style, "");
                 });
             }
-            var styles = [];
-            var innerObj = {
-                styles: {}
-            };
+		if( !isActive )
+		{
+	            var styles = [];
+	            var innerObj = {
+	                styles: {}
+	            };
 
-            angular.forEach(obj.styles, function (style, styleIndex) {
-                var checkInnerStyles = styleIndex.split("inner-row-");
+	            angular.forEach(obj.styles, function (style, styleIndex) {
+	                var checkInnerStyles = styleIndex.split("inner-row-");
 
-                if (checkInnerStyles.length > 1) {
-                    innerObj.styles[checkInnerStyles[1]] = style;
-                }
-                else {
-                    element.css(styleIndex, style);
-                    styles.push(styleIndex);
-                }
-            });
-            element.data("initStyles", styles.join(','));
-
-            /* Native Grid Config Config */
-            if (!element.data("originalClass")) {
-                element.data("originalClass", element.attr("class"));
-            }
-            element.removeClass();
-            if (obj.config && Object.keys(obj.config).length > 0) {
-                angular.forEach(Object.keys(obj.config), function (key, index) {
-                    if (key) {
-                        element.attr(key, obj.config[key]);
-                    }
-                });
-            }
-            element.addClass(element.data("originalClass"));
-
-            if (Object.keys(innerObj.styles).length > 0) {
-                updateSettingStyle(innerObj, element.find(".usky-row-inner"))
-            }
+	                if (checkInnerStyles.length > 1) {
+	                    innerObj.styles[checkInnerStyles[1]] = style;
+	                }
+	                else {
+	                    element.css(styleIndex, style);
+	                    styles.push(styleIndex);
+	                }
+	            });
+	            element.data("initStyles", styles.join(','));
+	            if (Object.keys(innerObj.styles).length > 0) {
+	                updateSettingStyle(innerObj, element.find(".umb-row-inner"))
+	            }
+	    }
         }
 
         // Watch the grid's model
@@ -52,7 +87,7 @@
             $timeout(function () {
                 $scope.$watch(function () {
                     var grids = [];
-                    angular.forEach(angular.element($(".usky-grid")), function (value, key) {
+                    angular.forEach(angular.element($(".umb-grid")), function (value, key) {
                         grids.push(angular.element(value).scope().model.value)
                     });
                     return grids;
@@ -63,9 +98,9 @@
                                 if (value.sections) {
                                     angular.forEach(value.sections, function (section, sectionIndex) {
                                         angular.forEach(section.rows, function (row, rowIndex) {
-                                            updateSettingStyle(row, $(".usky-grid:eq(" + key + ") .usky-column:eq(" + sectionIndex + ") .usky-row:eq(" + rowIndex + ")"))
+                                            updateSettingStyle(row, $(".umb-grid:eq(" + key + ") .umb-column:eq(" + sectionIndex + ") .umb-row:eq(" + rowIndex + ")"))
                                             angular.forEach(row.areas, function (area, areaIndex) {
-                                                updateSettingStyle(area, $(".usky-grid:eq(" + key + ") .usky-column:eq(" + sectionIndex + ") .usky-row:eq(" + rowIndex + ") .mainTd.usky-cell:eq(" + areaIndex + ")"));
+                                                updateSettingStyle(area, $(".umb-grid:eq(" + key + ") .umb-column:eq(" + sectionIndex + ") .umb-row:eq(" + rowIndex + ") .mainTd.umb-cell:eq(" + areaIndex + ")"));
                                             })
                                         });
                                     });
